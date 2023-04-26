@@ -1,0 +1,20 @@
+
+-- Inserts
+insert car_vendor=Kia,car_model=Sorento,car_id=asdsa,year=2017,carrying=4,axles=2,devices=['radio';'window']
+
+
+-- Selects
+select car_vendor,car_id,year devices/include/['radio'] car_model==Focus
+select car_vendor,car_id,car_model devices/include/['radio'] car_vendor==
+select car_vendor,car_id,car_model devices/include/['radio']
+
+
+-- Updates
+update car_id=1111,year=1111 devices/include/['radio'] car_model==Kia
+
+-- Deletes
+delete car_model==Focus
+
+-- Uniqs
+uniq devices
+uniq car_vendor
