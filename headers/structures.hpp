@@ -70,8 +70,6 @@ struct Node {
 };
 
 class List {
-//private:
-//    Node *header;
 
 public:
     Node *header;
@@ -79,7 +77,6 @@ public:
     ~List();
 
     void push(Car *car);
-    void pop();
     void printList();
 };
 
