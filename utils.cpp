@@ -211,36 +211,39 @@ bool checkStrCond(string val, Condition *cond)
     // _IN, _INCLUDE, _EQ, _NOT_EQ
     string *strArr = new string[10];
     int count;
+    bool f;
     switch (cond->operand)
     {
     case _INCLUDE:
         count = splitBySeps(strArr, cond->val, "[],'", 10);
         for (int i = 0; i < count; i++)
         {
-            if (val != strArr[i])
-                return false;
+            if (val != strArr[i]) f = false;
         }
-        return true;
+        if(f != false) f = true;
+        break;
     case _IN:
         count = splitBySeps(strArr, cond->val, "[],'", 10);
         for (int i = 0; i < count; i++)
         {
-            if (val == strArr[i])
-                return true;
+            if (val == strArr[i]) f = true;
         }
-        return false;
+        if(f != true) f = false;
+        break;
     case _EQ:
-        if (val == cond->val)
-            return true;
-        return false;
+        if (val == cond->val)f = true;
+        else f = false;
+        break;
     case _NOT_EQ:
-        if (val == cond->val)
-            return false;
-        return true;
+        if (val == cond->val) f = false;
+        else f = true;
+        break;
     default:
-        return false;
+        f = false;
+        break;
     }
     delete[] strArr;
+    return f;
 }
 
 bool checkIntCond(int val, Condition *cond)
@@ -248,52 +251,51 @@ bool checkIntCond(int val, Condition *cond)
     //_IN, _INCLUDE, _EQ, _NOT_EQ, _LESS, _MORE, _LESS_EQ, _MORE_EQ,
     string *strArr = new string[10];
     int count;
+    bool f;
     switch (cond->operand)
     {
     case _INCLUDE:
         count = splitBySeps(strArr, cond->val, "[],'", 10);
         for (int i = 0; i < count; i++)
         {
-            if (val != stoi(strArr[i]))
-                return false;
+            if (val != stoi(strArr[i])) f = false;
         }
-        return true;
+        if(f != false) f = true;
     case _IN:
         count = splitBySeps(strArr, cond->val, "[],'", 10);
         for (int i = 0; i < count; i++)
         {
-            if (val == stoi(strArr[i]))
-                return true;
+            if (val == stoi(strArr[i])) f = true;
         }
-        return false;
+        if(f != true) f = false;
     case _EQ:
-        if (val == stoi(cond->val))
-            return true;
-        return false;
+        if (val == stoi(cond->val)) f = true;
+        else f = false;
+        break;
     case _NOT_EQ:
-        if (val == stoi(cond->val))
-            return false;
-        return true;
+        if (val == stoi(cond->val)) f = false;
+        else f = true;
     case _LESS:
-        if (val < stoi(cond->val))
-            return true;
-        return false;
+        if (val < stoi(cond->val)) f = true;
+        else f = false;
     case _MORE:
-        if (val > stoi(cond->val))
-            return true;
-        return false;
+        if (val > stoi(cond->val)) f = true;
+        else f = false;
+        break;
     case _LESS_EQ:
-        if (val <= stoi(cond->val))
-            return true;
-        return false;
+        if (val <= stoi(cond->val)) f = true;
+        else f = false;
+        break;
     case _MORE_EQ:
-        if (val >= stoi(cond->val))
-            return true;
-        return false;
+        if (val >= stoi(cond->val)) f = true;
+        else f = false;
+        break;
     default:
-        return false;
+        f = false;
+        break;
     }
     delete[] strArr;
+    return f;
 }
 
 bool checkSetCond(Set *val, Condition *cond)
@@ -301,44 +303,63 @@ bool checkSetCond(Set *val, Condition *cond)
 
     string *strArr = new string[10];
     int count = splitBySeps(strArr, cond->val, "[],'", 10);
+    bool f;
     switch (cond->operand)
     {
     case _INCLUDE:
         for (int i = 0; i < count; i++)
         {
-            if (!val->inSet(strArr[i]))
-                return false;
+            if (!val->inSet(strArr[i])){
+                f =  false;
+                break;
+            }
         }
-        return true;
+        f = true;
+        break;
     case _IN:
         for (int i = 0; i < count; i++)
         {
-            if (val->inSet(strArr[i]))
-                return true;
+            if (val->inSet(strArr[i])){
+                f = true;
+                break;
+            }
         }
-        return false;
+        f = false;
+        break;
     case _EQ:
-        if (!val->checkSize(count + 1))
-            return false;
+        if (!val->checkSize(count + 1)){
+            f = false;
+            break;
+        }
         for (int i = 0; i < count; i++)
         {
-            if (!val->inSet(strArr[i]))
-                return false;
+            if (!val->inSet(strArr[i])){
+                f = false;
+                break;
+            }
         }
-        return true;
+        f = true;
+        break;
     case _NOT_EQ:
-        if (!val->checkSize(count + 1))
-            return true;
+        if (!val->checkSize(count + 1)){
+            f = true;
+            break;
+        }
         for (int i = 0; i < count; i++)
         {
-            if (!val->inSet(strArr[i]))
-                return true;
+            if (!val->inSet(strArr[i])){
+                f = true;
+                break;
+            }
         }
-        return false;
+        f = false;
+        break;
     default:
-        return false;
+        f = false;
+        break;
     }
     delete[] strArr;
+    return f;
 }
 
 bool checkCond(Node *node, Condition **conds, int c)

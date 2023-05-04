@@ -133,7 +133,7 @@ int main()
                 cout << "delete:" << kD << endl;
 
                 // Free memory
-                for (int i = 0; i < count - 2; i++)
+                for (int i = 0; i < count - 1; i++)
                     delete conds[i];
                 delete[] conds;
             }

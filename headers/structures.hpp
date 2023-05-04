@@ -77,6 +77,7 @@ public:
     ~List();
 
     void push(Car *car);
+    void pop();
     void printList();
 };
 
