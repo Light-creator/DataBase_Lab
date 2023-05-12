@@ -1,5 +1,6 @@
 #include <iostream>
 #include <string>
+#include <fstream>
 
 #include "structures.hpp"
 
@@ -40,7 +41,7 @@ Set *createDevices(string devices)
 {
     Set *set = new Set(6);
     string *strArr = new string[9];
-    int count = splitBySeps(strArr, devices, "[];", 9);
+    int count = splitBySeps(strArr, devices, "['];", 9);
     for (int i = 0; i < count; i++)
     {
         set->insertVal(strArr[i]);
@@ -211,35 +212,35 @@ bool checkStrCond(string val, Condition *cond)
     // _IN, _INCLUDE, _EQ, _NOT_EQ
     string *strArr = new string[10];
     int count;
-    bool f;
+    int f = -1;
     switch (cond->operand)
     {
     case _INCLUDE:
         count = splitBySeps(strArr, cond->val, "[],'", 10);
         for (int i = 0; i < count; i++)
         {
-            if (val != strArr[i]) f = false;
+            if (val != strArr[i]) f = 0;
         }
-        if(f != false) f = true;
+        if(f == -1) f = 1;
         break;
     case _IN:
         count = splitBySeps(strArr, cond->val, "[],'", 10);
         for (int i = 0; i < count; i++)
         {
-            if (val == strArr[i]) f = true;
+            if (val == strArr[i]) f = 1;
         }
-        if(f != true) f = false;
+        if(f == -1) f = 0;
         break;
     case _EQ:
-        if (val == cond->val)f = true;
-        else f = false;
+        if (val == cond->val) f = 1;
+        else f = 0;
         break;
     case _NOT_EQ:
-        if (val == cond->val) f = false;
-        else f = true;
+        if (val == cond->val) f = 0;
+        else f = 1;
         break;
     default:
-        f = false;
+        f = 0;
         break;
     }
     delete[] strArr;
@@ -251,47 +252,47 @@ bool checkIntCond(int val, Condition *cond)
     //_IN, _INCLUDE, _EQ, _NOT_EQ, _LESS, _MORE, _LESS_EQ, _MORE_EQ,
     string *strArr = new string[10];
     int count;
-    bool f;
+    int f = -1;
     switch (cond->operand)
     {
     case _INCLUDE:
         count = splitBySeps(strArr, cond->val, "[],'", 10);
         for (int i = 0; i < count; i++)
         {
-            if (val != stoi(strArr[i])) f = false;
+            if (val != stoi(strArr[i])) f = 0;
         }
-        if(f != false) f = true;
+        if(f == -1) f = 1;
     case _IN:
         count = splitBySeps(strArr, cond->val, "[],'", 10);
         for (int i = 0; i < count; i++)
         {
-            if (val == stoi(strArr[i])) f = true;
+            if (val == stoi(strArr[i])) f = 1;
         }
-        if(f != true) f = false;
+        if(f == -1) f = 0;
     case _EQ:
-        if (val == stoi(cond->val)) f = true;
-        else f = false;
+        if (val == stoi(cond->val)) f = 1;
+        else f = 0;
         break;
     case _NOT_EQ:
-        if (val == stoi(cond->val)) f = false;
-        else f = true;
+        if (val == stoi(cond->val)) f = 1;
+        else f = 0;
     case _LESS:
-        if (val < stoi(cond->val)) f = true;
-        else f = false;
+        if (val < stoi(cond->val)) f = 1;
+        else f = 0;
     case _MORE:
-        if (val > stoi(cond->val)) f = true;
+        if (val > stoi(cond->val)) f = 1;
         else f = false;
         break;
     case _LESS_EQ:
         if (val <= stoi(cond->val)) f = true;
-        else f = false;
+        else f = 0;
         break;
     case _MORE_EQ:
-        if (val >= stoi(cond->val)) f = true;
-        else f = false;
+        if (val >= stoi(cond->val)) f = 1;
+        else f = 0;
         break;
     default:
-        f = false;
+        f = 0;
         break;
     }
     delete[] strArr;
@@ -303,59 +304,59 @@ bool checkSetCond(Set *val, Condition *cond)
 
     string *strArr = new string[10];
     int count = splitBySeps(strArr, cond->val, "[],'", 10);
-    bool f;
+    int f = -1;
     switch (cond->operand)
     {
     case _INCLUDE:
         for (int i = 0; i < count; i++)
         {
             if (!val->inSet(strArr[i])){
-                f =  false;
+                f =  0;
                 break;
             }
         }
-        f = true;
+        if(f == -1) f = true;
         break;
     case _IN:
         for (int i = 0; i < count; i++)
         {
             if (val->inSet(strArr[i])){
-                f = true;
+                f = 1;
                 break;
             }
         }
-        f = false;
+        if(f == -1) f = 0;
         break;
     case _EQ:
         if (!val->checkSize(count + 1)){
-            f = false;
+            f = 0;
             break;
         }
         for (int i = 0; i < count; i++)
         {
             if (!val->inSet(strArr[i])){
-                f = false;
+                f = 0;
                 break;
             }
         }
-        f = true;
+        if(f == -1) f = 1;
         break;
     case _NOT_EQ:
         if (!val->checkSize(count + 1)){
-            f = true;
+            f = 1;
             break;
         }
         for (int i = 0; i < count; i++)
         {
             if (!val->inSet(strArr[i])){
-                f = true;
+                f = 1;
                 break;
             }
         }
-        f = false;
+        if(f == -1) f = 0;
         break;
     default:
-        f = false;
+        f = 0;
         break;
     }
     delete[] strArr;
@@ -393,7 +394,10 @@ bool checkCond(Node *node, Condition **conds, int c)
 void printNodeWhere(vars *fields, Condition **conds, List *list, int c, int fc)
 {
     // _VENDOR, _MODEL, _ID, _CARR, _YEAR, _DEVICES, _AXLES,
+    ofstream fout("output.txt");
+
     cout << endl;
+    fout << endl;
     Node *ptr = list->header;
     int idx = 1;
     while (ptr != nullptr)
@@ -402,45 +406,59 @@ void printNodeWhere(vars *fields, Condition **conds, List *list, int c, int fc)
         if (f)
         {
             cout << idx << ")" << endl;
+            fout << idx << ")" << endl;
             for (int i = 0; i < fc; i++)
             {
                 switch (fields[i])
                 {
                 case _VENDOR:
                     cout << "car_vendor: " << ptr->car->car_vendor << endl;
+                    fout << "car_vendor: " << ptr->car->car_vendor << endl;
                     break;
                 case _MODEL:
                     cout << "car_model: " << ptr->car->car_model << endl;
+                    fout << "car_model: " << ptr->car->car_model << endl;
                     break;
                 case _ID:
                     cout << "car_id: " << ptr->car->car_id << endl;
+                    fout << "car_id: " << ptr->car->car_id << endl;
                     break;
                 case _YEAR:
                     cout << "year: " << ptr->car->year << endl;
+                    fout << "year: " << ptr->car->year << endl;
                     break;
                 case _CARR:
                     cout << "carrying: " << ptr->car->carrying << endl;
+                    fout << "carrying: " << ptr->car->carrying << endl;
                     break;
                 case _AXLES:
                     cout << "axles: " << ptr->car->axles << endl;
+                    fout << "axles: " << ptr->car->axles << endl;
                     break;
                 case _DEVICES:
                     cout << "devices: ";
+                    fout << "devices: ";
                     ptr->car->devices->printSet();
                     cout << endl;
+                    fout << endl;
                     break;
                 default:
                     break;
                 }
             }
             cout << endl;
+            fout << endl;
             idx++;
         }
 
         ptr = ptr->next;
     }
-    if(idx == 1) cout << "Select 0 elements..." << endl;
+    if(idx == 1) {
+        cout << "Select 0 elements..." << endl;
+        fout << "Select 0 elements..." << endl;
+    }
     cout << "---------------------" << endl;
+    fout << "---------------------" << endl;
 }
 
 int updateWhere(fieldsUpdate **fields, Condition **conds, List *list, int c)

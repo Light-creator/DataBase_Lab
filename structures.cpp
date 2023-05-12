@@ -1,5 +1,6 @@
 #include <iostream>
 #include <string>
+#include <fstream>
 
 #include "structures.hpp"
 
@@ -20,15 +21,18 @@ Set::~Set()
 
 bool Set::insertVal(string value)
 {
+    ofstream fout("output.txt");
     if (size == cap)
     {
         cout << "Error: Too many args..." << endl;
+        fout << "Error: Too many args..." << endl;
         return false;
     }
 
     if (inSet(value))
     {
         cout << "Error: This item already exists..." << endl;
+        fout << "Error: This item already exists..." << endl;
         return false;
     }
 
@@ -54,12 +58,17 @@ bool Set::inSet(string value)
 
 void Set::printSet()
 {
+    ofstream fout("output.txt");
+
     cout << "{ ";
+    fout << "{ ";
     for (int i = 0; i < size; i++)
     {
         cout << vals[i] << " ";
+        fout << vals[i] << " ";
     }
     cout << "}" << endl;
+    fout << "}" << endl;
 }
 
 Car::Car(string _car_vendor, string _car_model, string _car_id, int _year, int _carrying, int _axles, Set *_devices)
@@ -80,13 +89,19 @@ Car::~Car()
 
 void Car::printCar()
 {
+    ofstream fout("output.txt");
+
     cout << "car vendor: " << car_vendor << " car model: " << car_model << endl;
+    fout << "car vendor: " << car_vendor << " car model: " << car_model << endl;
     cout << "car id: " << car_id << " year: " << year << endl;
+    fout << "car id: " << car_id << " year: " << year << endl;
     cout << "carrying: " << carrying << " axles: " << axles << endl;
+    fout << "carrying: " << carrying << " axles: " << axles << endl;
     cout << "devices: ";
+    fout << "devices: ";
     devices->printSet();
-    cout << endl
-         << "-------------------------------" << endl;
+    cout << endl << "-------------------------------" << endl;
+    fout << endl << "-------------------------------" << endl;
 }
 
 List::List()
@@ -129,15 +144,20 @@ void List::pop()
 
 void List::printList()
 {
+    ofstream fout("output.txt");
+
     cout << "[" << endl;
+    fout << "[" << endl;
     Node *tmp = header;
     int i = 0;
     while (tmp != nullptr)
     {
         cout << i + 1 << ") " << endl;
+        fout << i + 1 << ") " << endl;
         tmp->car->printCar();
         tmp = tmp->next;
         i++;
     }
     cout << "]" << endl;
+    fout << "]" << endl;
 }
