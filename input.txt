@@ -1,10 +1,12 @@
+insert car_vendor=Ford,car_model=Focus,car_id=asdsa,year=2017,carrying=4,axles=2,devices=['window']
 insert car_vendor=Kia,car_model=Optima,car_id=asdsa,year=2013,carrying=4,axles=2,devices=['window']
 insert car_vendor=Kia,car_model=Sorento,car_id=asdsa,year=2011,carrying=4,axles=2,devices=['radio']
 insert car_vendor=Kia,car_model=Rio,car_id=asdsa,year=2012,carrying=4,axles=2,devices=['radio';'window';'belts']
 insert car_vendor=Bmw,car_model=x3,car_id=asdsa,year=2014,carrying=4,axles=2,devices=['radio']
 insert car_vendor=Bmw,car_model=x5,car_id=asdsa,year=2015,carrying=4,axles=2,devices=['belts';'window']
 insert car_vendor=Bmw,car_model=x6,car_id=asdsa,year=2016,carrying=4,axles=2,devices=['radio';'window']
-insert car_vendor=Ford,car_model=Focus,car_id=asdsa,year=2017,carrying=4,axles=2,devices=['window']
 insert car_vendor=Ford,car_model=Transit,car_id=asdsa,year=2018,carrying=4,axles=2,devices=['belts']
 insert car_vendor=Ford,car_model=Mustang,car_id=asdsa,year=2019,carrying=4,axles=2,devices=['radio']
 select car_vendor,car_id,year devices/include/['radio'] car_vendor==Kia
+delete car_model==Focus
+select car_vendor,car_id,year car_vendor==Ford

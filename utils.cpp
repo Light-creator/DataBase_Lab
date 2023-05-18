@@ -561,12 +561,14 @@ int deleteWhere(Condition **conds, List *list, int c)
 {
     Node *ptr = list->header;
     Node *predPtr = list->header;
+    Node *tmp;
     Set *set;
     int idx = 0;
     int kD = 0;
     while (ptr != nullptr)
     {
         bool f = checkCond(ptr, conds, c);
+        tmp = ptr;
         if (f)
         {
             kD++;
@@ -591,12 +593,13 @@ int deleteWhere(Condition **conds, List *list, int c)
             {
                 predPtr->next = ptr->next;
             }
-            delete ptr;
         }
 
-        predPtr = ptr;
-        ptr = ptr->next;
+        predPtr = tmp;
+        ptr = tmp->next;
         idx++;
+
+        if(f) delete tmp;
     }
     return kD;
 }
